@@ -9,3 +9,6 @@ let config = {
 };
 // Starting the Phaser game with the object config as a param
 let game = new Phaser.Game(config);
+
+// Reserve some keyboard variables
+let keyF, keyLEFT, keyRIGHT;
