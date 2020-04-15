@@ -71,23 +71,32 @@ class Play extends Phaser.Scene{
         }
         this.scoreLeft = this.add.text(69, 54, this.p1Score, scoreConfig);
 
+        game.settings.currentTimer = game.settings.gameTimer;
+        game.settings.timeLeft = this.add.text(320, 54, game.settings.currentTimer, scoreConfig);
+
         this.gameOver = false;
 
-        // 60-second play clock
         scoreConfig.fixedWidth = 0;
-        this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, '(F)ire to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
-            this.gameOver = true;
-        }, null, this);
+        
+        // Update play clock
+        this.timer = this.time.addEvent({
+            delay: 100,                // ms
+            callback: this.reduceTime,
+            loop: true
+        });
+
+        this.gameOverText = this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
+        this.restartText = this.add.text(game.config.width/2, game.config.height/2 + 64, '(F)ire to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
+        this.gameOverText.setVisible(false);
+        this.restartText.setVisible(false);
     }
 
     update(){
         // Check key input for restart
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyF)){
-            this.scene.restart(this.p1Score);
+            this.restartGame();
         }
-        else if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)){
+        if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)){
             this.scene.start("menuScene");
         }
 
@@ -110,29 +119,39 @@ class Play extends Phaser.Scene{
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
             this.p1Rocket.reset();
             this.shipExplode(this.ship03);
+            game.settings.currentTimer += 0.1;
           }
           if (this.checkCollision(this.p1Rocket, this.ship02)) {
             this.p1Rocket.reset();
             this.shipExplode(this.ship02);
+            game.settings.currentTimer += 0.1;
           }
           if (this.checkCollision(this.p1Rocket, this.ship01)) {
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);
+            game.settings.currentTimer += 0.1;
           }
 
           // Collision checking between p2Rocket and Ships
         if(this.checkCollision(this.p2Rocket, this.ship03)) {
             this.p2Rocket.reset();
             this.shipExplode(this.ship03);
+            game.settings.currentTimer += 0.1;
           }
           if (this.checkCollision(this.p2Rocket, this.ship02)) {
             this.p2Rocket.reset();
             this.shipExplode(this.ship02);
+            game.settings.currentTimer += 0.1;
           }
           if (this.checkCollision(this.p2Rocket, this.ship01)) {
             this.p2Rocket.reset();
             this.shipExplode(this.ship01);
+            game.settings.currentTimer += 0.1;
           }
+        
+        if(game.settings.currentTimer <= 0){
+            this.endGame();
+        }
     }
 
     checkCollision(rocket, ship) {
@@ -161,5 +180,32 @@ class Play extends Phaser.Scene{
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
         this.sound.play('sfx_explosion');
+    }
+
+    endGame() {
+        this.gameOverText.setVisible(true);
+        this.restartText.setVisible(true);
+        this.gameOver = true;
+        this.timer.paused = true;
+        game.settings.timeLeft.text = 0
+    }
+
+    restartGame() {
+        this.gameOverText.setVisible(false);
+        this.restartText.setVisible(false);
+        this.gameOver = false;
+        this.timer.paused = false;
+        game.settings.currentTimer = game.settings.gameTimer;
+        game.settings.timeLeft.text = game.settings.currentTimer;
+        this.p1Score = 0;
+        this.scoreLeft.text = this.p1Score;
+        this.ship01.x = game.config.width + 192;
+        this.ship02.x = game.config.width + 96;
+        this.ship03.x = game.config.width;
+    }
+
+    reduceTime() {
+        game.settings.currentTimer -= 0.1;
+        game.settings.timeLeft.text = game.settings.currentTimer;
     }
 }
