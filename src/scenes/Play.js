@@ -29,7 +29,8 @@ class Play extends Phaser.Scene{
         console.log(this);
 
         // Add rocket (player 1)
-        this.p1Rocket = new Rocket(this, game.config.width/2, 431, 'rocket').setScale(0.5, 0.5).setOrigin(0, 0);
+        this.p1Rocket = new Rocket(this, game.config.width/3, 431, 'rocket').setScale(0.5, 0.5).setOrigin(0, 0);
+        this.p2Rocket = new Rocket2(this, game.config.width*2/3, 431, 'rocket').setScale(0.5, 0.5).setOrigin(0, 0);
 
         // Add spaceship (x3)
         // Adding the top ship (Ship 01)
@@ -41,6 +42,9 @@ class Play extends Phaser.Scene{
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        key4 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_FOUR);
+        key6 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_SIX);
+        keyADD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_ADD);
 
         // Animation config
         this.anims.create({
@@ -49,7 +53,7 @@ class Play extends Phaser.Scene{
             frameRate: 30
         });
 
-        // Keeping score in this variable
+        // Keeping score in this variable (Cooperative score so the var name is misleading)
         this.p1Score = 0;
 
         // Displaying the score
@@ -93,15 +97,16 @@ class Play extends Phaser.Scene{
 
         // If the game isn't over, keep updating
         if(!this.gameOver){
-            // Update rocket
+            // Update rockets
             this.p1Rocket.update();
+            this.p2Rocket.update();
             // Update spaceship
             this.ship01.update();
             this.ship02.update();
             this.ship03.update();
         }
 
-        // Collision checking between Rockets and Ships
+        // Collision checking between p1Rocket and Ships
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
             this.p1Rocket.reset();
             this.shipExplode(this.ship03);
@@ -112,6 +117,20 @@ class Play extends Phaser.Scene{
           }
           if (this.checkCollision(this.p1Rocket, this.ship01)) {
             this.p1Rocket.reset();
+            this.shipExplode(this.ship01);
+          }
+
+          // Collision checking between p2Rocket and Ships
+        if(this.checkCollision(this.p2Rocket, this.ship03)) {
+            this.p2Rocket.reset();
+            this.shipExplode(this.ship03);
+          }
+          if (this.checkCollision(this.p2Rocket, this.ship02)) {
+            this.p2Rocket.reset();
+            this.shipExplode(this.ship02);
+          }
+          if (this.checkCollision(this.p2Rocket, this.ship01)) {
+            this.p2Rocket.reset();
             this.shipExplode(this.ship01);
           }
     }

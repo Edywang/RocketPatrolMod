@@ -36,10 +36,11 @@ class Menu extends Phaser.Scene {
         let textSpacer = 64;
 
         this.add.text(centerX, centerY-textSpacer, 'ROCKET PATROL', menuConfig).setOrigin(0.5);
-        this.add.text(centerX, centerY, 'Use ⟷ arrows to move & (F) to fire', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY, '1 Use ⟷ to move & F to fire', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY + textSpacer, '2 Use numpad 4 & 6 to move & + to fire', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#00FF00';
         menuConfig.color = '#000';
-        this.add.text(centerX, centerY + textSpacer, 'Press ← for Easy or → for Hard', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY + (textSpacer * 2), 'Press ← for Easy or → for Hard', menuConfig).setOrigin(0.5);
 
         console.log(this);
 
