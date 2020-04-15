@@ -87,8 +87,14 @@ class Play extends Phaser.Scene{
 
         this.gameOverText = this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
         this.restartText = this.add.text(game.config.width/2, game.config.height/2 + 64, '(F)ire to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
+        this.creditText = this.add.text(game.config.width/2, game.config.height/2 + 128, 'Background music by Kent Kercher', scoreConfig).setOrigin(0.5);
+        this.creditLink = this.add.text(game.config.width/2, game.config.height/2 + 192, 'https://www.kentkercher.com/', scoreConfig).setOrigin(0.5);
         this.gameOverText.setVisible(false);
         this.restartText.setVisible(false);
+        this.creditText.setVisible(false);
+        this.creditLink.setVisible(false);
+
+        game.music.play();
     }
 
     update(){
@@ -185,14 +191,24 @@ class Play extends Phaser.Scene{
     endGame() {
         this.gameOverText.setVisible(true);
         this.restartText.setVisible(true);
+        this.creditText.setVisible(true);
+        this.creditLink.setVisible(true);
         this.gameOver = true;
         this.timer.paused = true;
+        game.music.pause();
         game.settings.timeLeft.text = 0
     }
 
     restartGame() {
+        this.p1Rocket.x = game.config.width/3;
+        this.p2Rocket.x = game.config.width*2/3;
+        this.p1Rocket.reset();
+        this.p2Rocket.reset();
         this.gameOverText.setVisible(false);
         this.restartText.setVisible(false);
+        this.creditText.setVisible(false);
+        this.creditLink.setVisible(false);
+        game.music.resume();
         this.gameOver = false;
         this.timer.paused = false;
         game.settings.currentTimer = game.settings.gameTimer;

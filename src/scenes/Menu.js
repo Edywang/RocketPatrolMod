@@ -14,6 +14,7 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_select', './assets/blip_select12.wav');
         this.load.audio('sfx_explosion', './assets/explosion38.wav');
         this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
+        this.load.audio('bg_music', './assets/ArcadeEscapade.mp3');
     }
 
     create(){
@@ -51,6 +52,9 @@ class Menu extends Phaser.Scene {
 
         // Change scenes
         // this.scene.start("playScene");
+        
+        game.music = this.sound.add('bg_music');
+        game.music.setLoop(true);
     }
 
     update() {
